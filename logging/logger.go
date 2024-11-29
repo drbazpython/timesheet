@@ -66,7 +66,7 @@ func DefineLogger(level string) log.Logger {
 
 //MyLipglossStyle ...
 func MyLipglossStyle(word string) lipgloss.Style {
-	width := len(word)
+	width := 40
 	var style = lipgloss.NewStyle().
     Bold(true).
     Foreground(lipgloss.Color("#FAFAFA")).

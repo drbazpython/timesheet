@@ -7,13 +7,14 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"bytes"
 
 	//"time"
 	//"fmt"
 	//cmd "drbaz.com/invoice/cmd/cobraui"
 	//"drbaz.com/invoice/internal"
 	//"github.com/charmbracelet/log"
-	"github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 	"github.com/nguyenthenguyen/docx"
 	"drbaz.com/timesheet/configs"
 	"drbaz.com/timesheet/logging"
@@ -25,31 +26,32 @@ import (
 	var Logger = logging.DefineLogger(Config.LogLevel)
 
 
-// GetTemplate ...
+// GetTemplate .. deprecated.
 func GetTemplate() string {
 	Logger.Debug("docprocessing Package")
-	wordTemplate := Config.WordTemplate
+	wordTemplate := Config.TimesheetTemplate
 	Logger.Debug("Word Template ","is ",wordTemplate)
 	
 	return wordTemplate
 }
 
 // ReplaceDocument ...
-func ReplaceDocument(timesheetDate string) string {
-	//TODO get template from user home documents folder
+func ReplaceDocument(template []byte,timesheetDate string) string {
 
 	Logger.Info("Starting Timesheet Creation")
 	
 	docDir, _ := os.UserHomeDir()
 	docDir = docDir + "/Desktop/"
-	Logger.Debug("Document Directory ","is ",docDir)
+	//Logger.Debug("Document Directory ","is ",docDir)
+	//template := Config.WordTemplate
+	//template = docDir + template
+	//template := timesheet.EmWordTemplate
+	newInvoice := Config.ReplacedTimesheetTemplate
 	
-	template := Config.WordTemplate
-	template = docDir + template
-	newInvoice := Config.ReplacedWordTemplate
-	
+	//Read template from memory
+	r, err := docx.ReadDocxFromMemory(bytes.NewReader(template), int64(len(template)))
 	// Read from docx file
-	r, err := docx.ReadDocxFile(template)
+	//r, err := docx.ReadDocxFile(template)
 	// Or read from memory
 	// r, err := docx.ReadDocxFromMemory(data io.ReaderAt, size int64)
 
@@ -98,14 +100,14 @@ func ReplaceDocument(timesheetDate string) string {
 	// }
 	// HS_Invoice
 	//TODO Replace XX with invoiceNumber
-	newInvoice = docDir + fileName + timesheetDate + ".docx"
+	newInvoice = docDir + fileName + "07" + ".docx"
 	//logger.Debug(newInvoice)
 	err = docx1.WriteToFile(newInvoice)
 	if err != nil {
 		panic(err)
 	}
 	r.Close()
-	Logger.Debug("Invoice created successfully", "file", newInvoice)
+	//Logger.Info("Invoice created successfully", "file", newInvoice)
 	return newInvoice
 }
 
@@ -215,47 +217,47 @@ func ListPrinters() ([]string, error) {
 }
 
 // TestPDFCreation tests the PDF creation and printing functionality
-func TestPDFCreation() error {
+// func TestPDFCreation() error {
 
-	// Get user's Documents directory
-	docDir, err := os.UserHomeDir()
-	if err != nil {
-		return fmt.Errorf("failed to get user home directory: %v", err)
-	}
-	docDir = docDir + "/Documents/"
+// 	// Get user's Documents directory
+// 	docDir, err := os.UserHomeDir()
+// 	if err != nil {
+// 		return fmt.Errorf("failed to get user home directory: %v", err)
+// 	}
+// 	docDir = docDir + "/Documents/"
 
-	// Load environment variables
-	err = godotenv.Load(".env")
-	if err != nil {
-		return fmt.Errorf("error loading .env file: %v", err)
-	}
+// 	// Load environment variables
+// 	err = godotenv.Load(".env")
+// 	if err != nil {
+// 		return fmt.Errorf("error loading .env file: %v", err)
+// 	}
 
-	// Create a test invoice
-	Logger.Info("Creating test invoice...")
-	testInvoice := ReplaceDocument(
-		"2024-03-20", // Invoice date
-		// "TEST001",    // Invoice number
-		// "10",         // Hours
-		// "2024-03-01", // Start date
-		// "2024-03-15", // End date
-		// "20",         // Hourly rate
-	)
+// 	// Create a test invoice
+// 	Logger.Info("Creating test invoice...")
+// 	testInvoice := ReplaceDocument(,
+// 		"2024-03-20", // Invoice date
+// 		// "TEST001",    // Invoice number
+// 		// "10",         // Hours
+// 		// "2024-03-01", // Start date
+// 		// "2024-03-15", // End date
+// 		// "20",         // Hourly rate
+// 	)
 
-	if testInvoice == "" {
-		return fmt.Errorf("failed to create test invoice")
-	}
-	Logger.Info("Test invoice created", "path", testInvoice)
+// 	if testInvoice == "" {
+// 		return fmt.Errorf("failed to create test invoice")
+// 	}
+// 	Logger.Info("Test invoice created", "path", testInvoice)
 
-	// Convert to PDF and print
-	Logger.Info("Converting to PDF...")
-	pdfPath := CreatePDF(testInvoice,false)
-	if pdfPath == "" {
-		return fmt.Errorf("failed to create PDF")
-	}
-	Logger.Info("PDF created successfully", "path", pdfPath)
+// 	// Convert to PDF and print
+// 	Logger.Info("Converting to PDF...")
+// 	pdfPath := CreatePDF(testInvoice,false)
+// 	if pdfPath == "" {
+// 		return fmt.Errorf("failed to create PDF")
+// 	}
+// 	Logger.Info("PDF created successfully", "path", pdfPath)
 
-	return nil
-}
+// 	return nil
+// }
 
 //PrintDocument ...
 // func PrintDocument(doc string) []byte {

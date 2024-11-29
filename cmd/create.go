@@ -2,8 +2,16 @@
 package cmd
 
 import (
+	// embed used to embed timesheet template
+	_ "embed"
 	"github.com/spf13/cobra"
+	"drbaz.com/timesheet/cmd/docporocessing"
+	//"drbaz.com/timesheet/cmd/timesheet"
 )
+
+//go:embed templates/timesheet.docx
+//EmWordTemplate The embedded word template 
+var EmWordTemplate []byte
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
@@ -16,6 +24,10 @@ var createCmd = &cobra.Command{
 			Logger.Info("Create timesheet, save to pdf, and print it\n")
 		}else{
 			Logger.Info("Create timesheet, save to pdf but NOT print it\n")
+
+		newInvoice := docprocessing.ReplaceDocument(EmWordTemplate,"26Nov2024")
+		Logger.Info(newInvoice)
+		//CreatePDF(newInvoice,printFlag)
 	}
 },
 }

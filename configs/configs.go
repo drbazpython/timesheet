@@ -8,15 +8,12 @@ import (
 
 //Configs ... for Viper
 type Configs struct {
-	// Port string `mapstructure:"PORT"`
-	// Db string `mapstructure:"DB"`
-	// TestDb string `mapstructure:"TEST_DB"`
 	LogLevel string `mapstructure:"LOG_LEVEL"`
-	WordTemplate string `mapstructure:"WORD_TEMPLATE"`
-	ReplacedWordTemplate string `mapstructure:"REPLACED_WORD_TEMPLATE"`
-	// JwtSecret string `mapstructure:"childokeford"`
-	// User string `mapstructure:"drbaz"`
-	// Password string `mapstructure:"Hydrogen1"`
+	//WordTemplate []byte `mapstructure:"WORD_TEMPLATE"`
+	//ReplacedWordTemplate []byte `mapstructure:"REPLACED_WORD_TEMPLATE"`
+	TimesheetTemplate string `mapstructure:"TIMESHEET_TEMPLATE"`
+	ReplacedTimesheetTemplate string `mapstructure:"REPLACED_TIMESHEET_TEMPLATE"`
+	ResetPassword string `mapstructure:"RESET_PASSWORD"`
 }
 
 //LoadEnvViper ...

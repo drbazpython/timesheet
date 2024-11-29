@@ -3,6 +3,9 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/glebarez/sqlite"
+	"gorm.io/gorm"
+	//"github.com/pterm/pterm"
 )
 
 // listCmd represents the list command
@@ -12,6 +15,12 @@ var listCmd = &cobra.Command{
 	Long: `Shows the timesheet data in a table`,
 	Run: func(cmd *cobra.Command, args []string) {
 		Logger.Info("List timesheets\n")
+		timesheet := Timesheet{}
+		db, _ := gorm.Open(sqlite.Open("timesheet.db"))
+		rows  := db.Find(&timesheet).RowsAffected
+		Logger.Debugf("Database Rows = %d",rows)
+
+		// put database rows into a t
 	},
 }
 
